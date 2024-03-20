@@ -40,18 +40,31 @@ public class ThreadsManager
 
         Watch.Stop();
 
-        Console.WriteLine($"\nSe terminó de calcular las ventas por región: ({Watch.Elapsed})");
         var Result = JsonSerializer.Serialize(SalesByRegion);
-        Console.WriteLine($"{Result}\n");
+        Console.WriteLine($"\nSe terminó de calcular las ventas por región: ({Watch.Elapsed})\n{Result}\n");
     }
 
     public void CalculateSalesByRegionAndProduct()
     {
         Console.WriteLine($"Se están calculando las ventas por región y producto");
+
+        var Watch = new Stopwatch();
+        Watch.Start();
         
         Parallel.ForEach(FrameManager.Frame.Rows, GetParallelOptions(), (Item)=>
         {
-            
+            var Region = (string)Item["Region"];
+            var Product = (string)Item["Product"];
+            var Sale = (float)Item["Sales"];
+
+            var Key = $"{Region} y {Product}";
+
+            SalesByRegionAndProduct.AddOrUpdate(Key, Sale, (_, value) => value + Sale);
         });
+
+        Watch.Stop();
+
+        var Result = JsonSerializer.Serialize(SalesByRegionAndProduct);
+        Console.WriteLine($"\nSe terminó de calcular las ventas por región y producto: ({Watch.Elapsed})\n{Result}\n");
     }
 }

@@ -1,22 +1,4 @@
-﻿using System.Text.Json;
-using Microsoft.Data.Analysis;
-using Taller.Manager;
-
-var dataPath = "D:\\Cursos\\Distribuidos\\Taller_C#\\Taller\\Taller\\Resources\\Sales_Data_1.csv";
-
-var dataFrame = DataFrame.LoadCsv(dataPath);
-
-var Regions = dataFrame.GroupBy<string>("Region")
-   .Groupings
-   .AsParallel()
-   .Select(x => new
-   {
-       Region = x.Key,
-       Total = x.Select(row => (float) row["Sales"])
-           .Sum()
-   });
-
-var Result = JsonSerializer.Serialize(Regions);
+﻿using Taller.Manager;
 
 var SourceList = new Dictionary<string, string>()
 {
