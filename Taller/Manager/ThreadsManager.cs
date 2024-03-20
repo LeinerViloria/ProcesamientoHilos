@@ -2,6 +2,7 @@
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text.Json;
+using Newtonsoft.Json;
 
 namespace Taller.Manager;
 
@@ -40,7 +41,10 @@ public class ThreadsManager
 
         Watch.Stop();
 
-        var Result = JsonSerializer.Serialize(SalesByRegion);
+        var SalesOrdered = SalesByRegion.OrderBy(x => x.Key)
+            .ToDictionary(x => x.Key, x => x.Value);
+
+        var Result = JsonConvert.SerializeObject(SalesOrdered, Formatting.Indented);
         Console.WriteLine($"\nSe terminó de calcular las ventas por región: ({Watch.Elapsed})\n{Result}\n");
     }
 
@@ -64,7 +68,10 @@ public class ThreadsManager
 
         Watch.Stop();
 
-        var Result = JsonSerializer.Serialize(SalesByRegionAndProduct);
+        var SalesOrdered = SalesByRegionAndProduct.OrderBy(x => x.Key)
+            .ToDictionary(x => x.Key, x => x.Value);
+
+        var Result = JsonConvert.SerializeObject(SalesOrdered, Formatting.Indented);
         Console.WriteLine($"\nSe terminó de calcular las ventas por región y producto: ({Watch.Elapsed})\n{Result}\n");
     }
 }
