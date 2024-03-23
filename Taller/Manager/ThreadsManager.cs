@@ -6,13 +6,13 @@ using Newtonsoft.Json;
 
 namespace Taller.Manager;
 
-public class ThreadsManager
+public class ThreadsManager<T>
 {
     private ConcurrentDictionary<string, float> SalesByRegion { get; set; } = new();
     private ConcurrentDictionary<string, float> SalesByRegionAndProduct { get; set; } = new();
-    private readonly DataFrameManager FrameManager;
+    private readonly DataFrameManager<T> FrameManager;
 
-    public ThreadsManager(DataFrameManager FrameManager)
+    public ThreadsManager(DataFrameManager<T> FrameManager)
     {
         this.FrameManager = FrameManager;
 
