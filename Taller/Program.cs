@@ -1,18 +1,20 @@
 ﻿using Taller.Manager;
 
-var SourceList = new Dictionary<string, string>()
-{
-  {"DATASET 1", "D:\\Cursos\\Distribuidos\\Taller_C#\\Taller\\Taller\\Resources\\Sales_Data_1.csv"}  ,
-  {"DATASET 2", "D:\\Cursos\\Distribuidos\\Taller_C#\\Taller\\Taller\\Resources\\Sales_Data_2.csv"},
-  {"DATASET 3", "D:\\Cursos\\Distribuidos\\Taller_C#\\Taller\\Taller\\Resources\\Sales_Data_3.csv"},
-  {"DATASET 4", "D:\\Cursos\\Distribuidos\\Taller_C#\\Taller\\Taller\\Resources\\Sales_Data_4.csv"}
-};
+var Route = "D:\\Cursos\\Distribuidos\\Taller_C#\\Taller\\Taller\\Resources";
 
-foreach (var Item in SourceList)
-{
-    Console.WriteLine($"\n{Item.Key}\n");
+var DirectoryManager = new DirectoryManager(Route);
 
-    var FrameManager = new DataFrameManager(Item.Value);
+var FilesFound = DirectoryManager.GetFiles();
+
+if(!FilesFound)
+    return;
+
+for (int i = 0; i < DirectoryManager.Files.Count; i++)
+{
+    var Item = DirectoryManager.Files[i];
+    Console.WriteLine($"\n Dataset {i+1}\n");
+
+    var FrameManager = new DataFrameManager(Item);
     FrameManager.LoadCsv();
 
     var ThreadsManager = new ThreadsManager(FrameManager);
@@ -30,5 +32,5 @@ foreach (var Item in SourceList)
     catch (Exception e)
     {
         Console.WriteLine($"Ocurrió un error al ejecutar los procesos: {e.Message}");
-    }   
+    }
 }
