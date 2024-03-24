@@ -15,14 +15,14 @@ for (int i = 0; i < DirectoryManager.Files.Count; i++)
 {
     var Item = DirectoryManager.Files[i];
     var Dataset = $"Dataset {i+1}";
-    Console.WriteLine($"\n {Dataset} \n");
+    Console.WriteLine($"\n{Dataset}\n");
 
     try
     {
         var FrameManager = new DataFrameManager<SalesModel>(Item);
         FrameManager.LoadCsv();
 
-        var ThreadsManager = new ThreadsManager<SalesModel>(FrameManager);
+        var ThreadsManager = new ThreadsManager<SalesModel>(FrameManager, Item);
         
         var Tasks = new List<Task>()
         {

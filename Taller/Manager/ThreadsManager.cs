@@ -1,7 +1,6 @@
 
 using System.Collections.Concurrent;
 using System.Diagnostics;
-using System.Text.Json;
 using Newtonsoft.Json;
 
 namespace Taller.Manager;
@@ -11,10 +10,12 @@ public class ThreadsManager<T>
     private ConcurrentDictionary<string, float> SalesByRegion { get; set; } = new();
     private ConcurrentDictionary<string, float> SalesByRegionAndProduct { get; set; } = new();
     private readonly DataFrameManager<T> FrameManager;
+    private readonly string Route;
 
-    public ThreadsManager(DataFrameManager<T> FrameManager)
+    public ThreadsManager(DataFrameManager<T> FrameManager, string Route)
     {
         this.FrameManager = FrameManager;
+        this.Route = Route;
 
         Console.WriteLine($"Nucleos disponibles: {Environment.ProcessorCount}");
         Console.WriteLine($"Filas para procesar: {FrameManager.Frame.Rows.Count}\n");
@@ -44,8 +45,9 @@ public class ThreadsManager<T>
         var SalesOrdered = SalesByRegion.OrderBy(x => x.Key)
             .ToDictionary(x => x.Key, x => x.Value);
 
-        var Result = JsonConvert.SerializeObject(SalesOrdered, Formatting.Indented);
-        Console.WriteLine($"\nSe terminó de calcular las ventas por región: ({Watch.Elapsed})\n{Result}\n");
+        DirectoryManager.CreateResponse(Route, "SalesByRegion", SalesOrdered);
+
+        Console.WriteLine($"Se terminó de calcular las ventas por región: ({Watch.Elapsed})");
     }
 
     public void CalculateSalesByRegionAndProduct()
@@ -71,7 +73,8 @@ public class ThreadsManager<T>
         var SalesOrdered = SalesByRegionAndProduct.OrderBy(x => x.Key)
             .ToDictionary(x => x.Key, x => x.Value);
 
-        var Result = JsonConvert.SerializeObject(SalesOrdered, Formatting.Indented);
-        Console.WriteLine($"\nSe terminó de calcular las ventas por región y producto: ({Watch.Elapsed})\n{Result}\n");
+        DirectoryManager.CreateResponse(Route, "SalesByRegionAndProduct", SalesOrdered);
+
+        Console.WriteLine($"Se terminó de calcular las ventas por región y producto: ({Watch.Elapsed})");
     }
 }

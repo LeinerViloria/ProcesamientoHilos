@@ -26,4 +26,25 @@ public class DirectoryManager(string Route)
 
         return true;
     }
+
+    public static void CreateResponse(string Route, string Name, dynamic Value)
+    {
+        const string FolderName = "Datasets";
+        var FolderRoute = AppDomain.CurrentDomain.BaseDirectory;
+
+        FolderRoute = Path.Combine(FolderRoute, FolderName);
+
+        if(!Directory.Exists(FolderRoute))
+            Directory.CreateDirectory(FolderRoute);
+
+        Route = Route.Replace(".csv", "");
+        Route = Route.Split("\\").Last();
+
+        FolderRoute = Path.Combine(FolderRoute, Route);
+
+        if(!Directory.Exists(FolderRoute))
+            Directory.CreateDirectory(FolderRoute);
+
+        
+    }
 }
