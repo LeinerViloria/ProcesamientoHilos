@@ -1,4 +1,6 @@
 
+using Newtonsoft.Json;
+
 namespace Taller.Manager;
 
 public class DirectoryManager(string Route)
@@ -45,6 +47,10 @@ public class DirectoryManager(string Route)
         if(!Directory.Exists(FolderRoute))
             Directory.CreateDirectory(FolderRoute);
 
-        
+        var Json = JsonConvert.SerializeObject(Value, Formatting.Indented);
+
+        FolderRoute = Path.Combine(FolderRoute, $"{Name}.json");
+
+        File.WriteAllText(FolderRoute, Json);
     }
 }
